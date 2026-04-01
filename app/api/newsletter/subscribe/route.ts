@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/supabase'
+
+export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
   const { email, lang } = await req.json()
@@ -10,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   const language = lang === 'en' ? 'en' : 'es'
 
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('newsletter_subscribers')
     .upsert({ email: email.toLowerCase().trim(), lang: language, active: true }, { onConflict: 'email' })
 

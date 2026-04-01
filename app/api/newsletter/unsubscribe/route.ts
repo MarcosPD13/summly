@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/supabase'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
   const email = req.nextUrl.searchParams.get('email')
@@ -10,7 +12,7 @@ export async function GET(req: NextRequest) {
 
   const decoded = decodeURIComponent(email)
 
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('newsletter_subscribers')
     .update({ active: false })
     .eq('email', decoded.toLowerCase().trim())

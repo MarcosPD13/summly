@@ -3,7 +3,7 @@ import { Resend } from 'resend'
 import { fetchNews } from '@/lib/rss'
 import { enrichArticles } from '@/lib/summarize'
 import { generateSubject, buildEmailHtml } from '@/lib/email'
-import { supabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/supabase'
 import { Language } from '@/lib/types'
 
 export const dynamic = 'force-dynamic'
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
   const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'Summly <noticias@techpulse.app>'
 
   // Fetch all active subscribers
-  const { data: subscribers, error: dbError } = await supabase
+  const { data: subscribers, error: dbError } = await getSupabase()
     .from('newsletter_subscribers')
     .select('email, lang')
     .eq('active', true)
