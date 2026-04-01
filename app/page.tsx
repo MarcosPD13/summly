@@ -3,24 +3,8 @@
 import { useLanguage } from '@/context/LanguageContext'
 import NewsFeed from '@/components/NewsFeed'
 
-const ALL_SOURCES = 'TechCrunch · The Verge · Wired · Ars Technica · VentureBeat · MIT Tech Review · Hacker News · Xataka · Genbeta · Hipertextual · FayerWayer'
-
-const UI = {
-  en: {
-    tagline: 'Tech & Innovation',
-    subtitle: 'Top 20 stories from global tech sources, translated to English and AI-summarized. Auto-updates every 30 min. Stories expire after 12h.',
-    sources: ALL_SOURCES,
-  },
-  es: {
-    tagline: 'Tecnología e Innovación',
-    subtitle: 'Las 20 historias más relevantes de fuentes tech globales, traducidas al español y resumidas con IA. Se actualiza cada 30 min. Las noticias expiran a las 12h.',
-    sources: ALL_SOURCES,
-  },
-}
-
 export default function Home() {
   const { lang, setLang } = useLanguage()
-  const t = UI[lang]
 
   return (
     <main className="min-h-screen bg-bg">
@@ -34,10 +18,7 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <div>
-              <span className="font-bold text-white text-sm tracking-wide">Summly</span>
-              <span className="block text-xs text-slate-500 leading-none">{t.tagline}</span>
-            </div>
+            <span className="font-bold text-white text-sm tracking-wide">Summly</span>
           </div>
 
           {/* Right side */}
@@ -48,14 +29,14 @@ export default function Home() {
               Live
             </div>
 
-            {/* Language toggle */}
-            <div className="flex items-center bg-surface border border-white/[0.07] rounded-full p-0.5">
+            {/* Language toggle — black & white */}
+            <div className="flex items-center bg-white/[0.06] border border-white/[0.10] rounded-full p-0.5">
               <button
                 onClick={() => setLang('en')}
                 className={`px-3 py-1 text-xs font-medium rounded-full transition-all duration-200 ${
                   lang === 'en'
-                    ? 'bg-accent text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-white text-black shadow-sm'
+                    : 'text-zinc-500 hover:text-white'
                 }`}
               >
                 EN
@@ -64,8 +45,8 @@ export default function Home() {
                 onClick={() => setLang('es')}
                 className={`px-3 py-1 text-xs font-medium rounded-full transition-all duration-200 ${
                   lang === 'es'
-                    ? 'bg-accent text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-white text-black shadow-sm'
+                    : 'text-zinc-500 hover:text-white'
                 }`}
               >
                 ES
@@ -75,14 +56,8 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero strip */}
-      <div className="max-w-2xl mx-auto px-4 pt-8 pb-6">
-        <p className="text-slate-500 text-sm leading-relaxed mb-2">{t.subtitle}</p>
-        <p className="text-slate-600 text-xs">{t.sources}</p>
-      </div>
-
       {/* Feed */}
-      <div className="max-w-2xl mx-auto px-4 pb-16">
+      <div className="max-w-2xl mx-auto px-4 pt-6 pb-24">
         <NewsFeed />
       </div>
 
