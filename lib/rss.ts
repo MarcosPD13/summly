@@ -4,7 +4,7 @@ import { NewsItem, Language } from './types'
 const parser = new Parser({
   timeout: 8000,
   headers: {
-    'User-Agent': 'TechPulse/1.0 (RSS Reader)',
+    'User-Agent': 'Summly/1.0 (RSS Reader)',
     'Accept': 'application/rss+xml, application/xml, text/xml, */*',
   },
   customFields: {

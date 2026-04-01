@@ -22,12 +22,12 @@ export async function GET(req: NextRequest) {
   const lang = req.nextUrl.searchParams.get('lang') ?? 'es'
   const message =
     lang === 'en'
-      ? 'You have been unsubscribed from TechPulse newsletter.'
-      : 'Te diste de baja del newsletter de TechPulse.'
+      ? 'You have been unsubscribed from Summly newsletter.'
+      : 'Te diste de baja del newsletter de Summly.'
 
   return new NextResponse(
     `<html><body style="font-family:sans-serif;text-align:center;padding:60px;color:#374151;">
-      <h2>⚡ TechPulse</h2><p>${message}</p>
+      <h2>⚡ Summly</h2><p>${message}</p>
     </body></html>`,
     { headers: { 'Content-Type': 'text/html' } }
   )

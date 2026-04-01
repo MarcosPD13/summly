@@ -28,7 +28,7 @@ const UI = {
   },
 }
 
-const STORAGE_KEY = 'techpulse-newsletter-dismissed'
+const STORAGE_KEY = 'summly-newsletter-dismissed'
 
 export default function NewsletterButton() {
   const { lang } = useLanguage()

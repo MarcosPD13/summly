@@ -40,8 +40,8 @@ function defaultSubject(lang: Language): string {
     month: 'long',
   })
   return lang === 'es'
-    ? `⚡ TechPulse — Noticias del ${date}`
-    : `⚡ TechPulse — Tech news for ${date}`
+    ? `⚡ Summly — Noticias del ${date}`
+    : `⚡ Summly — Tech news for ${date}`
 }
 
 function formatTimeAgo(isoDate: string, lang: Language): string {
@@ -124,7 +124,7 @@ export function buildEmailHtml(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TechPulse</title>
+  <title>Summly</title>
 </head>
 <body style="margin:0;padding:20px;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <div style="max-width:600px;margin:0 auto;">
@@ -133,7 +133,7 @@ export function buildEmailHtml(
     <div style="background:#0F0F17;border-radius:12px 12px 0 0;padding:28px 24px;text-align:center;">
       <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:6px;">
         <span style="font-size:20px;">⚡</span>
-        <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">TechPulse</span>
+        <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">Summly</span>
       </div>
       <div style="color:#a78bfa;font-size:13px;font-weight:600;">${headerTitle}</div>
       <div style="color:#475569;font-size:11px;margin-top:4px;">${headerSub}</div>

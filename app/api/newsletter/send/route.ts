@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://techpulse.vercel.app'
-  const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'TechPulse <noticias@techpulse.app>'
+  const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'Summly <noticias@techpulse.app>'
 
   // Fetch all active subscribers
   const { data: subscribers, error: dbError } = await supabase

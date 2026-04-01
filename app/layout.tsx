@@ -7,7 +7,7 @@ import NewsletterButton from '@/components/NewsletterButton'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'TechPulse — Tech & Innovation News',
+  title: 'Summly — Tech & Innovation News',
   description: 'Top tech and innovation stories, updated every 30 minutes. EN/ES.',
 }
 

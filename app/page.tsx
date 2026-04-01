@@ -35,7 +35,7 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <span className="font-bold text-white text-sm tracking-wide">TechPulse</span>
+              <span className="font-bold text-white text-sm tracking-wide">Summly</span>
               <span className="block text-xs text-slate-500 leading-none">{t.tagline}</span>
             </div>
           </div>
@@ -89,7 +89,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-white/[0.06] py-6">
         <div className="max-w-2xl mx-auto px-4 flex items-center justify-between text-xs text-slate-600">
-          <span>TechPulse © {new Date().getFullYear()}</span>
+          <span>Summly © {new Date().getFullYear()}</span>
           <span>Updates every 30 min · 12h expiry</span>
         </div>
       </footer>
