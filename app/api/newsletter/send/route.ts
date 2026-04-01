@@ -18,8 +18,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://techpulse.vercel.app'
-  const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'Summly <noticias@techpulse.app>'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://techpulse-liard.vercel.app'
+  const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'Summly <onboarding@resend.dev>'
 
   // Fetch all active subscribers
   const { data: subscribers, error: dbError } = await getSupabase()
