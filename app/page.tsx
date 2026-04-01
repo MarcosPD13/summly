@@ -1,10 +1,12 @@
 'use client'
 
+import { useTheme } from '@/context/ThemeContext'
 import { useLanguage } from '@/context/LanguageContext'
 import NewsFeed from '@/components/NewsFeed'
 
 export default function Home() {
-  const { lang, setLang } = useLanguage()
+  const { theme, toggle } = useTheme()
+  const { lang } = useLanguage()
 
   return (
     <main className="min-h-screen bg-bg">
@@ -29,29 +31,20 @@ export default function Home() {
               Live
             </div>
 
-            {/* Language toggle — black & white */}
-            <div className="flex items-center bg-white/[0.06] border border-white/[0.10] rounded-full p-0.5">
-              <button
-                onClick={() => setLang('en')}
-                className={`px-3 py-1 text-xs font-medium rounded-full transition-all duration-200 ${
-                  lang === 'en'
-                    ? 'bg-white text-black shadow-sm'
-                    : 'text-zinc-500 hover:text-white'
-                }`}
-              >
-                EN
-              </button>
-              <button
-                onClick={() => setLang('es')}
-                className={`px-3 py-1 text-xs font-medium rounded-full transition-all duration-200 ${
-                  lang === 'es'
-                    ? 'bg-white text-black shadow-sm'
-                    : 'text-zinc-500 hover:text-white'
-                }`}
-              >
-                ES
-              </button>
-            </div>
+            {/* Theme toggle — filled circle (dark) / outlined circle (light) */}
+            <button
+              onClick={toggle}
+              aria-label="Toggle theme"
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-white/[0.15] hover:border-white/30 transition-colors"
+            >
+              {theme === 'dark' ? (
+                /* Dark mode: filled black circle */
+                <span className="w-4 h-4 rounded-full bg-white block" />
+              ) : (
+                /* Light mode: filled white circle */
+                <span className="w-4 h-4 rounded-full bg-black block" />
+              )}
+            </button>
           </div>
         </div>
       </header>
@@ -65,7 +58,7 @@ export default function Home() {
       <footer className="border-t border-white/[0.06] py-6">
         <div className="max-w-2xl mx-auto px-4 flex items-center justify-between text-xs text-slate-600">
           <span>Summly © {new Date().getFullYear()}</span>
-          <span>Updates every 30 min · 12h expiry</span>
+          <span>Updates every 30 min · 5h expiry</span>
         </div>
       </footer>
     </main>

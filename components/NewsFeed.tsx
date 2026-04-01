@@ -3,46 +3,55 @@
 import { useState, useEffect, useCallback } from 'react'
 import { NewsItem } from '@/lib/types'
 import { useLanguage } from '@/context/LanguageContext'
-import QuoteCard from './QuoteCard'
+import SwipeableNewsFeed from './SwipeableNewsFeed'
 
 const REFRESH_INTERVAL = 30 * 60 * 1000 // 30 minutes
 
 export default function NewsFeed() {
   const { lang } = useLanguage()
   const [items, setItems] = useState<NewsItem[]>([])
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [fetchedAt, setFetchedAt] = useState<Date | null>(null)
   const [nextRefreshAt, setNextRefreshAt] = useState<Date | null>(null)
   const [timeUntilRefresh, setTimeUntilRefresh] = useState('')
 
-  const fetchData = useCallback(async () => {
-    setLoading(true)
+  const fetchPage = useCallback(async (p: number, append: boolean) => {
+    if (p === 1) setLoading(true)
+    else setLoadingMore(true)
     setError(false)
     try {
-      const res = await fetch(`/api/news?lang=${lang}`)
+      const res = await fetch(`/api/news?lang=${lang}&page=${p}`)
       if (!res.ok) throw new Error('Failed to fetch')
       const data = await res.json()
-      setItems(data.items)
+      setItems(prev => append ? [...prev, ...data.items] : data.items)
+      setPage(data.page)
+      setHasMore(data.hasMore)
       setFetchedAt(new Date(data.fetchedAt))
       setNextRefreshAt(new Date(data.nextRefreshAt))
     } catch {
       setError(true)
     } finally {
       setLoading(false)
+      setLoadingMore(false)
     }
   }, [lang])
 
-  // Fetch on mount and language change
+  // Fetch page 1 on mount and language change
   useEffect(() => {
-    fetchData()
-  }, [fetchData])
+    setItems([])
+    setPage(1)
+    fetchPage(1, false)
+  }, [lang]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-refresh every 30 min
+  // Auto-refresh every 30 min (resets to page 1)
   useEffect(() => {
-    const interval = setInterval(fetchData, REFRESH_INTERVAL)
+    const interval = setInterval(() => fetchPage(1, false), REFRESH_INTERVAL)
     return () => clearInterval(interval)
-  }, [fetchData])
+  }, [fetchPage])
 
   // Countdown to next refresh
   useEffect(() => {
@@ -61,15 +70,21 @@ export default function NewsFeed() {
   // Filter expired items every minute
   useEffect(() => {
     const interval = setInterval(() => {
-      setItems((prev) => prev.filter((item) => new Date(item.expiresAt).getTime() > Date.now()))
+      setItems(prev => prev.filter(item => new Date(item.expiresAt).getTime() > Date.now()))
     }, 60 * 1000)
     return () => clearInterval(interval)
   }, [])
 
+  const handleLoadMore = useCallback(() => {
+    if (!loadingMore && hasMore) {
+      fetchPage(page + 1, true)
+    }
+  }, [fetchPage, page, hasMore, loadingMore])
+
   if (loading) {
     return (
       <div className="space-y-4">
-        {Array.from({ length: 6 }).map((_, i) => (
+        {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
             className="bg-card border border-white/[0.07] rounded-2xl p-5 animate-pulse"
@@ -93,7 +108,7 @@ export default function NewsFeed() {
       <div className="text-center py-16">
         <p className="text-slate-400 mb-4">Failed to load news. Check your connection.</p>
         <button
-          onClick={fetchData}
+          onClick={() => fetchPage(1, false)}
           className="px-4 py-2 bg-accent/20 text-accent border border-accent/30 rounded-xl text-sm hover:bg-accent/30 transition-colors"
         >
           Retry
@@ -102,36 +117,15 @@ export default function NewsFeed() {
     )
   }
 
-  if (items.length === 0) {
-    return (
-      <div className="text-center py-16">
-        <p className="text-slate-500 text-sm">No stories from the last 24 hours.</p>
-      </div>
-    )
-  }
-
   return (
-    <div>
-      {/* Status bar */}
-      <div className="flex items-center justify-between mb-6 text-xs text-slate-500 flex-wrap gap-2">
-        <span>
-          {items.length} {items.length === 1 ? 'story' : 'stories'} ·{' '}
-          {fetchedAt && `Updated ${new Date(fetchedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
-        </span>
-        <span className="flex items-center gap-1.5">
-          <svg className="w-3 h-3 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          Next refresh in {timeUntilRefresh}
-        </span>
-      </div>
-
-      {/* Cards */}
-      <div className="space-y-3">
-        {items.map((item, index) => (
-          <QuoteCard key={item.id} item={item} index={index} />
-        ))}
-      </div>
-    </div>
+    <SwipeableNewsFeed
+      items={items}
+      page={page}
+      hasMore={hasMore}
+      loadingMore={loadingMore}
+      onLoadMore={handleLoadMore}
+      timeUntilRefresh={timeUntilRefresh}
+      fetchedAt={fetchedAt}
+    />
   )
 }

@@ -65,17 +65,17 @@ async function fetchFeed(source: FeedSource): Promise<NewsItem[]> {
   try {
     const feed = await parser.parseURL(source.url)
     const now = Date.now()
-    const twelveHoursMs = 12 * 60 * 60 * 1000
+    const fiveHoursMs = 5 * 60 * 60 * 1000
 
     return feed.items
       .filter((item) => {
         if (!item.pubDate && !item.isoDate) return false
         const pubTime = new Date(item.isoDate || item.pubDate || '').getTime()
-        return !isNaN(pubTime) && now - pubTime < twelveHoursMs
+        return !isNaN(pubTime) && now - pubTime < fiveHoursMs
       })
       .map((item) => {
         const publishedAt = new Date(item.isoDate || item.pubDate || '').toISOString()
-        const expiresAt = new Date(new Date(publishedAt).getTime() + twelveHoursMs).toISOString()
+        const expiresAt = new Date(new Date(publishedAt).getTime() + fiveHoursMs).toISOString()
         const rawSummary = item.contentSnippet || item.description || item.contentEncoded || ''
 
         return {
@@ -115,8 +115,6 @@ export async function fetchNews(): Promise<NewsItem[]> {
     return true
   })
 
-  // Sort newest first, return top 20
-  return unique
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-    .slice(0, 20)
+  // Sort newest first (oldest at bottom)
+  return unique.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
 }
