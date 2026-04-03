@@ -9,7 +9,9 @@ import { Language } from '@/lib/types'
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY)
+}
 
 export async function GET(req: NextRequest) {
   // Verify Vercel cron secret
@@ -66,7 +68,7 @@ export async function GET(req: NextRequest) {
       }
     })
 
-    const { data, error } = await resend.batch.send(emails)
+    const { data, error } = await getResend().batch.send(emails)
     if (!error && data) totalSent += emails.length
   }
 
