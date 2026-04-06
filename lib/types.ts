@@ -8,8 +8,9 @@ export interface NewsItem {
   source: string
   sourceUrl: string
   articleUrl: string
+  imageUrl?: string     // article hero image if available
   publishedAt: string   // ISO string
-  expiresAt: string     // ISO string (publishedAt + 12h)
+  expiresAt: string     // ISO string (publishedAt + 5h)
   language: Language
 }
 

@@ -1,15 +1,22 @@
 'use client'
 
+import { useState } from 'react'
 import { useTheme } from '@/context/ThemeContext'
-import { useLanguage } from '@/context/LanguageContext'
+import { useAuth } from '@/context/AuthContext'
 import NewsFeed from '@/components/NewsFeed'
+import AuthModal from '@/components/AuthModal'
 
 export default function Home() {
   const { theme, toggle } = useTheme()
-  const { lang } = useLanguage()
+  const { user, signOut } = useAuth()
+  const [showAuth, setShowAuth] = useState(false)
 
   return (
     <main className="min-h-screen bg-bg">
+      {showAuth && (
+        <AuthModal onClose={() => setShowAuth(false)} onSuccess={() => setShowAuth(false)} />
+      )}
+
       {/* Header */}
       <header className="sticky top-0 z-10 bg-bg/80 backdrop-blur-md border-b border-white/[0.06]">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -31,17 +38,37 @@ export default function Home() {
               Live
             </div>
 
-            {/* Theme toggle — filled circle (dark) / outlined circle (light) */}
+            {/* Auth button */}
+            {user ? (
+              <div className="flex items-center gap-2">
+                <span className="hidden sm:block text-xs text-slate-500 max-w-[120px] truncate">
+                  {user.email}
+                </span>
+                <button
+                  onClick={signOut}
+                  className="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg border border-white/[0.08] hover:border-white/20 transition-colors"
+                >
+                  Salir
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowAuth(true)}
+                className="text-xs font-medium text-white bg-accent/20 hover:bg-accent/30 border border-accent/30 px-3 py-1.5 rounded-lg transition-colors"
+              >
+                Iniciar sesión
+              </button>
+            )}
+
+            {/* Theme toggle */}
             <button
               onClick={toggle}
               aria-label="Toggle theme"
               className="w-8 h-8 flex items-center justify-center rounded-full border border-white/[0.15] hover:border-white/30 transition-colors"
             >
               {theme === 'dark' ? (
-                /* Dark mode: filled black circle */
                 <span className="w-4 h-4 rounded-full bg-white block" />
               ) : (
-                /* Light mode: filled white circle */
                 <span className="w-4 h-4 rounded-full bg-black block" />
               )}
             </button>

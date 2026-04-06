@@ -8,7 +8,13 @@ const parser = new Parser({
     'Accept': 'application/rss+xml, application/xml, text/xml, */*',
   },
   customFields: {
-    item: [['content:encoded', 'contentEncoded'], ['description', 'description']],
+    item: [
+      ['content:encoded', 'contentEncoded'],
+      ['description', 'description'],
+      ['media:content', 'mediaContent'],
+      ['media:thumbnail', 'mediaThumbnail'],
+      ['enclosure', 'enclosure'],
+    ],
   },
 })
 
@@ -82,6 +88,28 @@ function generateId(url: string, pubDate: string): string {
   return Buffer.from(`${url}|${pubDate}`).toString('base64').slice(0, 16)
 }
 
+function extractImage(item: Record<string, unknown>): string | undefined {
+  // 1. media:content or media:thumbnail
+  const media = item.mediaContent as { $?: { url?: string }; url?: string } | undefined
+  if (media?.['$']?.url) return media['$'].url
+  if (media?.url) return media.url as string
+
+  const thumb = item.mediaThumbnail as { $?: { url?: string }; url?: string } | undefined
+  if (thumb?.['$']?.url) return thumb['$'].url
+  if (thumb?.url) return thumb.url as string
+
+  // 2. enclosure (podcasts / RSS images)
+  const enc = item.enclosure as { url?: string; type?: string } | undefined
+  if (enc?.url && enc.type?.startsWith('image/')) return enc.url
+
+  // 3. First <img> in contentEncoded or description
+  const html = (item.contentEncoded ?? item.description ?? '') as string
+  const match = html.match(/<img[^>]+src=["']([^"']+)["']/i)
+  if (match?.[1]) return match[1]
+
+  return undefined
+}
+
 async function fetchFeed(source: FeedSource): Promise<NewsItem[]> {
   try {
     const feed = await parser.parseURL(source.url)
@@ -99,6 +127,8 @@ async function fetchFeed(source: FeedSource): Promise<NewsItem[]> {
         const expiresAt = new Date(new Date(publishedAt).getTime() + fiveHoursMs).toISOString()
         const rawSummary = item.contentSnippet || item.description || item.contentEncoded || ''
 
+        const imageUrl = extractImage(item as unknown as Record<string, unknown>)
+
         return {
           id: generateId(item.link || item.guid || '', publishedAt),
           title: stripHtml(item.title || 'Untitled'),
@@ -107,6 +137,7 @@ async function fetchFeed(source: FeedSource): Promise<NewsItem[]> {
           source: source.name,
           sourceUrl: source.siteUrl,
           articleUrl: item.link || item.guid || source.siteUrl,
+          imageUrl,
           publishedAt,
           expiresAt,
           language: source.language,
