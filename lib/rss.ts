@@ -135,6 +135,42 @@ const FEEDS: FeedSource[] = [
   { name: 'NYT DealBook',        url: 'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml',       siteUrl: 'https://www.nytimes.com/section/business', language: 'en', category: 'economy' },
   { name: 'Financial Times',     url: 'https://www.ft.com/rss/home/us',                                  siteUrl: 'https://www.ft.com',                     language: 'en', category: 'economy' },
   { name: 'Barrons',             url: 'https://www.barrons.com/xml/rss/3_7152.xml',                      siteUrl: 'https://www.barrons.com',                language: 'en', category: 'economy' },
+  // ── TECH ── FR ─────────────────────────────────────────────────────────────
+  { name: '01net',               url: 'https://www.01net.com/rss/',                                       siteUrl: 'https://www.01net.com',                  language: 'fr', category: 'tech' },
+  { name: 'Numerama',            url: 'https://www.numerama.com/feed/',                                   siteUrl: 'https://www.numerama.com',               language: 'fr', category: 'tech' },
+  { name: 'Les Numériques',      url: 'https://www.lesnumeriques.com/articles.rss',                       siteUrl: 'https://www.lesnumeriques.com',          language: 'fr', category: 'tech' },
+  { name: 'Frandroid',           url: 'https://www.frandroid.com/feed',                                   siteUrl: 'https://www.frandroid.com',              language: 'fr', category: 'tech' },
+  { name: 'Clubic',              url: 'https://www.clubic.com/articles.rss',                              siteUrl: 'https://www.clubic.com',                 language: 'fr', category: 'tech' },
+  { name: 'CNET France',         url: 'https://www.cnetfrance.fr/feeds/rss/',                             siteUrl: 'https://www.cnetfrance.fr',              language: 'fr', category: 'tech' },
+  { name: 'ZDNet France',        url: 'https://www.zdnet.fr/feeds/rss/actualites/',                       siteUrl: 'https://www.zdnet.fr',                   language: 'fr', category: 'tech' },
+  { name: 'Le Monde Pixels',     url: 'https://www.lemonde.fr/pixels/rss_full.xml',                       siteUrl: 'https://www.lemonde.fr/pixels',          language: 'fr', category: 'tech' },
+  { name: 'MacG',                url: 'https://www.mac4ever.com/actu/rss',                                siteUrl: 'https://www.mac4ever.com',               language: 'fr', category: 'tech' },
+  { name: 'Presse Citron',       url: 'https://www.presse-citron.net/feed/',                              siteUrl: 'https://www.presse-citron.net',          language: 'fr', category: 'tech' },
+
+  // ── INNOVATION ── FR ───────────────────────────────────────────────────────
+  { name: 'L\'Usine Digitale',   url: 'https://www.usine-digitale.fr/rss/',                              siteUrl: 'https://www.usine-digitale.fr',          language: 'fr', category: 'innovation' },
+  { name: 'Journal du Net',      url: 'https://www.journaldunet.com/xml/rss/rss.xml',                     siteUrl: 'https://www.journaldunet.com',           language: 'fr', category: 'innovation' },
+  { name: 'Le Figaro Tech',      url: 'https://www.lefigaro.fr/rss/figaro_hightech.xml',                  siteUrl: 'https://www.lefigaro.fr/secteur/hightech', language: 'fr', category: 'innovation' },
+  { name: 'Science & Vie',       url: 'https://www.science-et-vie.com/feed',                              siteUrl: 'https://www.science-et-vie.com',         language: 'fr', category: 'innovation' },
+  { name: 'Sciences et Avenir',  url: 'https://www.sciencesetavenir.fr/feed',                             siteUrl: 'https://www.sciencesetavenir.fr',        language: 'fr', category: 'innovation' },
+  { name: 'Futura Sciences',     url: 'https://www.futura-sciences.com/rss/actualites.rss',               siteUrl: 'https://www.futura-sciences.com',        language: 'fr', category: 'innovation' },
+  { name: 'Intelligence Artif.', url: 'https://www.intelligence-artificielle-school.com/feed/',           siteUrl: 'https://www.intelligence-artificielle-school.com', language: 'fr', category: 'innovation' },
+
+  // ── BUSINESS ── FR ─────────────────────────────────────────────────────────
+  { name: 'BFM Business',        url: 'https://bfmbusiness.bfmtv.com/rss/en-direct/',                     siteUrl: 'https://bfmbusiness.bfmtv.com',          language: 'fr', category: 'business' },
+  { name: 'L\'Informaticien',    url: 'https://www.linformaticien.com/rss.xml',                           siteUrl: 'https://www.linformaticien.com',         language: 'fr', category: 'business' },
+  { name: 'Silicon',             url: 'https://www.silicon.fr/feed',                                      siteUrl: 'https://www.silicon.fr',                 language: 'fr', category: 'business' },
+  { name: 'Siècle Digital',      url: 'https://siecledigital.fr/feed/',                                   siteUrl: 'https://siecledigital.fr',               language: 'fr', category: 'business' },
+  { name: 'FrenchWeb',           url: 'https://www.frenchweb.fr/feed',                                    siteUrl: 'https://www.frenchweb.fr',               language: 'fr', category: 'business' },
+
+  // ── ECONOMY ── FR ──────────────────────────────────────────────────────────
+  { name: 'Les Echos',           url: 'https://www.lesechos.fr/rss/rss_une.xml',                          siteUrl: 'https://www.lesechos.fr',                language: 'fr', category: 'economy' },
+  { name: 'Le Monde Éco',        url: 'https://www.lemonde.fr/economie/rss_full.xml',                     siteUrl: 'https://www.lemonde.fr/economie',        language: 'fr', category: 'economy' },
+  { name: 'Capital',             url: 'https://www.capital.fr/feed/',                                     siteUrl: 'https://www.capital.fr',                 language: 'fr', category: 'economy' },
+  { name: 'Le Figaro Eco',       url: 'https://www.lefigaro.fr/rss/figaro_economie.xml',                  siteUrl: 'https://www.lefigaro.fr/economie',       language: 'fr', category: 'economy' },
+  { name: 'Challenges',          url: 'https://www.challenges.fr/rss.xml',                                siteUrl: 'https://www.challenges.fr',              language: 'fr', category: 'economy' },
+  { name: 'L\'Express Éco',      url: 'https://www.lexpress.fr/rss/alaune.xml',                           siteUrl: 'https://www.lexpress.fr',                language: 'fr', category: 'economy' },
+
   // ── ECONOMY ── ES ──────────────────────────────────────────────────────────
   { name: 'Expansión',           url: 'https://e00-expansion.uecdn.es/rss/portada.xml',                  siteUrl: 'https://www.expansion.com',              language: 'es', category: 'economy' },
   { name: 'El Economista',       url: 'https://www.eleconomista.es/rss/rss-eco-portada.php',             siteUrl: 'https://www.eleconomista.es',            language: 'es', category: 'economy' },

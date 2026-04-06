@@ -14,9 +14,21 @@ const LanguageContext = createContext<LanguageContextType>({
 })
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Language>('en')
+  const [lang, setLang] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('summly_lang')
+      if (saved === 'en' || saved === 'es' || saved === 'fr') return saved
+    }
+    return 'es'
+  })
+
+  const setLangPersist = (l: Language) => {
+    setLang(l)
+    if (typeof window !== 'undefined') localStorage.setItem('summly_lang', l)
+  }
+
   return (
-    <LanguageContext.Provider value={{ lang, setLang }}>
+    <LanguageContext.Provider value={{ lang, setLang: setLangPersist }}>
       {children}
     </LanguageContext.Provider>
   )

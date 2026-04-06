@@ -14,6 +14,7 @@ interface Props {
   hasMore: boolean
   loadingMore: boolean
   onLoadMore: () => void
+  onSeen: (id: string) => void
   timeUntilRefresh: string
   fetchedAt: Date | null
   nextRefreshAt: Date | null
@@ -66,7 +67,7 @@ function EndCard({ nextRefreshAt }: { nextRefreshAt: Date | null }) {
 }
 
 export default function SwipeableNewsFeed({
-  items, hasMore, loadingMore, onLoadMore, timeUntilRefresh, fetchedAt, nextRefreshAt,
+  items, hasMore, loadingMore, onLoadMore, onSeen, timeUntilRefresh, fetchedAt, nextRefreshAt,
 }: Props) {
   const { user } = useAuth()
   const [current, setCurrent] = useState(0)
@@ -86,6 +87,10 @@ export default function SwipeableNewsFeed({
         setShowAuthModal(true)
         return
       }
+      // Mark current card as seen before advancing
+      const currentItem = visibleItems[current]
+      if (currentItem) onSeen(currentItem.id)
+
       if (current >= visibleItems.length - 1) {
         if (hasMore) { onLoadMore(); return }
         // show end card
@@ -100,7 +105,7 @@ export default function SwipeableNewsFeed({
       setLeaving('right')
       setTimeout(() => { setCurrent(i => i - 1); setLeaving(null); setDragOffset(0) }, 260)
     }
-  }, [current, visibleItems.length, hasMore, onLoadMore, user])
+  }, [current, visibleItems, hasMore, onLoadMore, onSeen, user])
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {

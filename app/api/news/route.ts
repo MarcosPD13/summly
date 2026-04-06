@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const page = Math.max(1, parseInt(req.nextUrl.searchParams.get('page') ?? '1', 10))
   const categoryParam = req.nextUrl.searchParams.get('category') as Category | null
 
-  if (lang !== 'en' && lang !== 'es') {
+  if (lang !== 'en' && lang !== 'es' && lang !== 'fr') {
     return NextResponse.json({ error: 'Invalid language' }, { status: 400 })
   }
 

@@ -9,17 +9,23 @@ import NewsFeed from '@/components/NewsFeed'
 import CategoryPicker from '@/components/CategoryPicker'
 import AuthModal from '@/components/AuthModal'
 
-const CATEGORY_LABELS: Record<Category, { en: string; es: string }> = {
-  tech:       { en: 'Tech',       es: 'Tech' },
-  innovation: { en: 'Innovation', es: 'Innovación' },
-  business:   { en: 'Business',   es: 'Business' },
-  economy:    { en: 'Economy',    es: 'Economía' },
+const CATEGORY_LABELS: Record<Category, { en: string; es: string; fr: string }> = {
+  tech:       { en: 'Tech',       es: 'Tech',      fr: 'Tech' },
+  innovation: { en: 'Innovation', es: 'Innovación', fr: 'Innovation' },
+  business:   { en: 'Business',   es: 'Business',  fr: 'Business' },
+  economy:    { en: 'Economy',    es: 'Economía',   fr: 'Économie' },
 }
+
+const LANGS = [
+  { code: 'es', flag: '🇪🇸' },
+  { code: 'en', flag: '🇬🇧' },
+  { code: 'fr', flag: '🇫🇷' },
+] as const
 
 export default function Home() {
   const { theme, toggle } = useTheme()
   const { user, signOut } = useAuth()
-  const { lang } = useLanguage()
+  const { lang, setLang } = useLanguage()
   const [showAuth, setShowAuth] = useState(false)
   const [category, setCategory] = useState<Category | null>(null)
 
@@ -54,7 +60,7 @@ export default function Home() {
               <span className="font-bold text-white text-sm tracking-wide">Summly</span>
               {category && (
                 <span className="text-slate-500 text-xs ml-2">
-                  {CATEGORY_LABELS[category][lang]}
+                  {CATEGORY_LABELS[category][lang as 'en' | 'es' | 'fr']}
                 </span>
               )}
             </div>
@@ -65,6 +71,20 @@ export default function Home() {
             <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500">
               <span className="w-1.5 h-1.5 rounded-full bg-live animate-pulse-dot" />
               Live
+            </div>
+
+            {/* Language switcher */}
+            <div className="flex items-center rounded-lg border border-white/[0.08] overflow-hidden">
+              {LANGS.map(({ code, flag }) => (
+                <button
+                  key={code}
+                  onClick={() => setLang(code)}
+                  className={`px-2 py-1 text-sm transition-colors ${lang === code ? 'bg-accent/20 text-white' : 'text-slate-500 hover:text-white'}`}
+                  aria-label={code.toUpperCase()}
+                >
+                  {flag}
+                </button>
+              ))}
             </div>
 
             {user ? (

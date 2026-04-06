@@ -4,10 +4,8 @@ import { Category } from '@/lib/types'
 
 interface CategoryConfig {
   id: Category
-  label: string
-  labelEs: string
-  description: string
-  descriptionEs: string
+  labels: Record<'en' | 'es' | 'fr', string>
+  descriptions: Record<'en' | 'es' | 'fr', string>
   icon: string
   gradient: string
   border: string
@@ -17,10 +15,8 @@ interface CategoryConfig {
 const CATEGORIES: CategoryConfig[] = [
   {
     id: 'tech',
-    label: 'Tech',
-    labelEs: 'Tech',
-    description: 'Gadgets, software & platforms',
-    descriptionEs: 'Gadgets, software y plataformas',
+    labels:       { en: 'Tech',       es: 'Tech',      fr: 'Tech' },
+    descriptions: { en: 'Gadgets, software & platforms', es: 'Gadgets, software y plataformas', fr: 'Gadgets, logiciels & plateformes' },
     icon: '⚡',
     gradient: 'from-indigo-500/10 to-purple-500/10',
     border: 'border-indigo-500/20 hover:border-indigo-400/50',
@@ -28,10 +24,8 @@ const CATEGORIES: CategoryConfig[] = [
   },
   {
     id: 'innovation',
-    label: 'Innovation',
-    labelEs: 'Innovación',
-    description: 'AI, science & breakthroughs',
-    descriptionEs: 'IA, ciencia y nuevas ideas',
+    labels:       { en: 'Innovation', es: 'Innovación', fr: 'Innovation' },
+    descriptions: { en: 'AI, science & breakthroughs', es: 'IA, ciencia y nuevas ideas', fr: 'IA, science et nouvelles idées' },
     icon: '🔬',
     gradient: 'from-cyan-500/10 to-teal-500/10',
     border: 'border-cyan-500/20 hover:border-cyan-400/50',
@@ -39,10 +33,8 @@ const CATEGORIES: CategoryConfig[] = [
   },
   {
     id: 'business',
-    label: 'Business',
-    labelEs: 'Business',
-    description: 'Startups, VC & industry',
-    descriptionEs: 'Startups, inversión e industria',
+    labels:       { en: 'Business',   es: 'Business',  fr: 'Business' },
+    descriptions: { en: 'Startups, VC & industry', es: 'Startups, inversión e industria', fr: 'Startups, capital & industrie' },
     icon: '📈',
     gradient: 'from-emerald-500/10 to-green-500/10',
     border: 'border-emerald-500/20 hover:border-emerald-400/50',
@@ -50,10 +42,8 @@ const CATEGORIES: CategoryConfig[] = [
   },
   {
     id: 'economy',
-    label: 'Economy',
-    labelEs: 'Economía',
-    description: 'Markets, finance & macro',
-    descriptionEs: 'Mercados, finanzas y macro',
+    labels:       { en: 'Economy',    es: 'Economía',  fr: 'Économie' },
+    descriptions: { en: 'Markets, finance & macro', es: 'Mercados, finanzas y macro', fr: 'Marchés, finance et macro' },
     icon: '💹',
     gradient: 'from-amber-500/10 to-orange-500/10',
     border: 'border-amber-500/20 hover:border-amber-400/50',
@@ -62,7 +52,7 @@ const CATEGORIES: CategoryConfig[] = [
 ]
 
 interface Props {
-  lang: 'en' | 'es'
+  lang: 'en' | 'es' | 'fr'
   onSelect: (category: Category) => void
 }
 
@@ -72,10 +62,10 @@ export default function CategoryPicker({ lang, onSelect }: Props) {
       {/* Heading */}
       <div className="mb-10 text-center">
         <h1 className="text-white font-bold text-2xl mb-2">
-          {lang === 'es' ? '¿Qué querés leer hoy?' : "What do you want to read today?"}
+          {lang === 'es' ? '¿Qué querés leer hoy?' : lang === 'fr' ? 'Que voulez-vous lire aujourd\'hui ?' : 'What do you want to read today?'}
         </h1>
         <p className="text-slate-500 text-sm">
-          {lang === 'es' ? 'Elegí una categoría para empezar' : 'Pick a category to get started'}
+          {lang === 'es' ? 'Elegí una categoría para empezar' : lang === 'fr' ? 'Choisissez une catégorie pour commencer' : 'Pick a category to get started'}
         </p>
       </div>
 
@@ -95,10 +85,10 @@ export default function CategoryPicker({ lang, onSelect }: Props) {
             {/* Text */}
             <div>
               <p className="text-white font-semibold text-base leading-tight">
-                {lang === 'es' ? cat.labelEs : cat.label}
+                {cat.labels[lang]}
               </p>
               <p className="text-slate-400 text-xs mt-0.5 leading-snug">
-                {lang === 'es' ? cat.descriptionEs : cat.description}
+                {cat.descriptions[lang]}
               </p>
             </div>
 

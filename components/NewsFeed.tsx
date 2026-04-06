@@ -1,11 +1,30 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { NewsItem, Category } from '@/lib/types'
 import { useLanguage } from '@/context/LanguageContext'
 import SwipeableNewsFeed from './SwipeableNewsFeed'
 
 const REFRESH_INTERVAL = 30 * 60 * 1000
+
+function getSeenKey(category: Category) {
+  return `summly_seen_${category}`
+}
+
+function loadSeenIds(category: Category): Set<string> {
+  try {
+    const raw = localStorage.getItem(getSeenKey(category))
+    return raw ? new Set(JSON.parse(raw)) : new Set()
+  } catch {
+    return new Set()
+  }
+}
+
+function saveSeenIds(category: Category, ids: Set<string>) {
+  try {
+    localStorage.setItem(getSeenKey(category), JSON.stringify([...ids]))
+  } catch {}
+}
 
 interface Props {
   category: Category
@@ -22,6 +41,17 @@ export default function NewsFeed({ category }: Props) {
   const [fetchedAt, setFetchedAt] = useState<Date | null>(null)
   const [nextRefreshAt, setNextRefreshAt] = useState<Date | null>(null)
   const [timeUntilRefresh, setTimeUntilRefresh] = useState('')
+  const seenIds = useRef<Set<string>>(new Set())
+
+  // Load seen IDs from localStorage on mount / category change
+  useEffect(() => {
+    seenIds.current = loadSeenIds(category)
+  }, [category])
+
+  const handleSeen = useCallback((id: string) => {
+    seenIds.current.add(id)
+    saveSeenIds(category, seenIds.current)
+  }, [category])
 
   const fetchPage = useCallback(async (p: number, append: boolean) => {
     if (p === 1) setLoading(true)
@@ -31,7 +61,12 @@ export default function NewsFeed({ category }: Props) {
       const res = await fetch(`/api/news?lang=${lang}&page=${p}&category=${category}`)
       if (!res.ok) throw new Error('Failed to fetch')
       const data = await res.json()
-      setItems(prev => append ? [...prev, ...data.items] : data.items)
+      // Filter out already-seen articles (skip filter on explicit load-more)
+      const incoming: NewsItem[] = data.items
+      const unseen = append
+        ? incoming
+        : incoming.filter((item: NewsItem) => !seenIds.current.has(item.id))
+      setItems(prev => append ? [...prev, ...unseen] : unseen)
       setPage(data.page)
       setHasMore(data.hasMore)
       setFetchedAt(new Date(data.fetchedAt))
@@ -125,6 +160,7 @@ export default function NewsFeed({ category }: Props) {
       hasMore={hasMore}
       loadingMore={loadingMore}
       onLoadMore={handleLoadMore}
+      onSeen={handleSeen}
       timeUntilRefresh={timeUntilRefresh}
       fetchedAt={fetchedAt}
       nextRefreshAt={nextRefreshAt}

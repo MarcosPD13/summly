@@ -1,4 +1,4 @@
-export type Language = 'en' | 'es'
+export type Language = 'en' | 'es' | 'fr'
 export type Category = 'tech' | 'innovation' | 'business' | 'economy'
 
 export interface NewsItem {
