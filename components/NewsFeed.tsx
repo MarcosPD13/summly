@@ -1,13 +1,17 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { NewsItem } from '@/lib/types'
+import { NewsItem, Category } from '@/lib/types'
 import { useLanguage } from '@/context/LanguageContext'
 import SwipeableNewsFeed from './SwipeableNewsFeed'
 
-const REFRESH_INTERVAL = 30 * 60 * 1000 // 30 minutes
+const REFRESH_INTERVAL = 30 * 60 * 1000
 
-export default function NewsFeed() {
+interface Props {
+  category: Category
+}
+
+export default function NewsFeed({ category }: Props) {
   const { lang } = useLanguage()
   const [items, setItems] = useState<NewsItem[]>([])
   const [page, setPage] = useState(1)
@@ -24,7 +28,7 @@ export default function NewsFeed() {
     else setLoadingMore(true)
     setError(false)
     try {
-      const res = await fetch(`/api/news?lang=${lang}&page=${p}`)
+      const res = await fetch(`/api/news?lang=${lang}&page=${p}&category=${category}`)
       if (!res.ok) throw new Error('Failed to fetch')
       const data = await res.json()
       setItems(prev => append ? [...prev, ...data.items] : data.items)
@@ -38,22 +42,19 @@ export default function NewsFeed() {
       setLoading(false)
       setLoadingMore(false)
     }
-  }, [lang])
+  }, [lang, category])
 
-  // Fetch page 1 on mount and language change
   useEffect(() => {
     setItems([])
     setPage(1)
     fetchPage(1, false)
-  }, [lang]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [lang, category]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-refresh every 30 min (resets to page 1)
   useEffect(() => {
     const interval = setInterval(() => fetchPage(1, false), REFRESH_INTERVAL)
     return () => clearInterval(interval)
   }, [fetchPage])
 
-  // Countdown to next refresh
   useEffect(() => {
     if (!nextRefreshAt) return
     const tick = () => {
@@ -67,7 +68,6 @@ export default function NewsFeed() {
     return () => clearInterval(interval)
   }, [nextRefreshAt])
 
-  // Filter expired items every minute
   useEffect(() => {
     const interval = setInterval(() => {
       setItems(prev => prev.filter(item => new Date(item.expiresAt).getTime() > Date.now()))
@@ -76,27 +76,28 @@ export default function NewsFeed() {
   }, [])
 
   const handleLoadMore = useCallback(() => {
-    if (!loadingMore && hasMore) {
-      fetchPage(page + 1, true)
-    }
+    if (!loadingMore && hasMore) fetchPage(page + 1, true)
   }, [fetchPage, page, hasMore, loadingMore])
 
   if (loading) {
     return (
       <div className="space-y-4">
-        {Array.from({ length: 4 }).map((_, i) => (
+        {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="bg-card border border-white/[0.07] rounded-2xl p-5 animate-pulse"
+            className="bg-card border border-white/[0.07] rounded-2xl overflow-hidden animate-pulse"
             style={{ animationDelay: `${i * 100}ms` }}
           >
-            <div className="flex gap-2 mb-3">
-              <div className="h-5 w-24 bg-white/10 rounded-full" />
-              <div className="h-5 w-16 bg-white/5 rounded-full" />
+            <div className="h-40 bg-white/5" />
+            <div className="p-5 space-y-3">
+              <div className="flex gap-2">
+                <div className="h-5 w-24 bg-white/10 rounded-full" />
+                <div className="h-5 w-16 bg-white/5 rounded-full" />
+              </div>
+              <div className="h-5 w-3/4 bg-white/10 rounded" />
+              <div className="h-4 w-full bg-white/5 rounded" />
+              <div className="h-4 w-5/6 bg-white/5 rounded" />
             </div>
-            <div className="h-5 w-3/4 bg-white/10 rounded mb-2" />
-            <div className="h-4 w-full bg-white/5 rounded mb-1" />
-            <div className="h-4 w-5/6 bg-white/5 rounded" />
           </div>
         ))}
       </div>
@@ -106,12 +107,12 @@ export default function NewsFeed() {
   if (error) {
     return (
       <div className="text-center py-16">
-        <p className="text-slate-400 mb-4">Failed to load news. Check your connection.</p>
+        <p className="text-slate-400 mb-4">Error cargando noticias.</p>
         <button
           onClick={() => fetchPage(1, false)}
           className="px-4 py-2 bg-accent/20 text-accent border border-accent/30 rounded-xl text-sm hover:bg-accent/30 transition-colors"
         >
-          Retry
+          Reintentar
         </button>
       </div>
     )
@@ -126,6 +127,7 @@ export default function NewsFeed() {
       onLoadMore={handleLoadMore}
       timeUntilRefresh={timeUntilRefresh}
       fetchedAt={fetchedAt}
+      nextRefreshAt={nextRefreshAt}
     />
   )
 }
