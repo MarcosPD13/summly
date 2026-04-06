@@ -63,6 +63,7 @@ export async function GET(req: NextRequest) {
       return {
         from: fromEmail,
         to: sub.email,
+        replyTo: 'marcosparaje@gmail.com',
         subject: subjectByLang[lang],
         html: buildEmailHtml(enrichedByLang[lang], lang, siteUrl, unsubscribeUrl),
       }

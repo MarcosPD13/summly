@@ -28,7 +28,13 @@ export async function GET(req: NextRequest) {
   const items = await enrichArticles(pageItems, lang)
 
   const now = new Date()
-  const nextRefreshAt = new Date(now.getTime() + 30 * 60 * 1000)
+  const nextRefreshAt = new Date(now)
+  const mins = now.getMinutes()
+  if (mins < 30) {
+    nextRefreshAt.setMinutes(30, 0, 0)
+  } else {
+    nextRefreshAt.setHours(nextRefreshAt.getHours() + 1, 0, 0, 0)
+  }
 
   const response: NewsResponse & { page: number; total: number; hasMore: boolean } = {
     items,
